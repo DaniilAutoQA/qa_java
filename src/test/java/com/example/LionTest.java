@@ -1,54 +1,28 @@
 package com.example;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
-@RunWith(Parameterized.class)
+@RunWith(MockitoJUnitRunner.class)
 public class LionTest {
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    Feline feline = mock(Feline.class);
-    private final String sex;
-    private final boolean expected;
-
-    public LionTest(String sex, boolean expected) {
-        this.sex = sex;
-        this.expected = expected;
-    }
-
-    @Parameterized.Parameters
-    public static Object[][] getTextData() {
-        return new Object[][]{
-                {"Самец", true},
-                {"Самка", false},
-        };
-    }
-
-    @Test
-    public void verifyDoesHaveManeWithParameterized() throws Exception {
-        Feline feline = new Feline();
-        Lion leon = new Lion(feline, sex);
-        leon.doesHaveMane();
-        assertEquals(leon.doesHaveMane(), expected);
-    }
+    @Mock
+    Feline feline;
 
     @Test
     public void shouldGetKittensCount() throws Exception {
         Lion leon = new Lion(feline, "Самец");
-        leon.getKittens();
-        verify(feline).getKittens();
+        int expected = 1;
+        when(feline.getKittens()).thenReturn(1);
+        assertEquals(expected, leon.getKittens());
     }
 
 
@@ -61,7 +35,8 @@ public class LionTest {
     @Test
     public void shouldGetPredatorList() throws Exception {
         Lion leon = new Lion(feline, "Самец");
-        leon.getFood();
-        verify(feline).eatMeat();
+        List<String> expected = List.of("Животные", "Птицы", "Рыба");
+        when(feline.eatMeat()).thenReturn(List.of("Животные", "Птицы", "Рыба"));
+        assertEquals(leon.getFood(), expected);
     }
 }
